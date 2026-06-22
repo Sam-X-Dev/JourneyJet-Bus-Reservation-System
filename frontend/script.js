@@ -765,3 +765,640 @@ document.getElementById("deleteConductor");
 
 const clearConductor =
 document.getElementById("clearConductor");
+
+
+// ==============================================
+// Load Conductors
+// ==============================================
+
+async function loadConductors(){
+
+    const result = await request("/conductors");
+
+    conductorTableBody.innerHTML = "";
+
+    result.data.forEach(conductor=>{
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+
+            <td>${conductor.c_id}</td>
+
+            <td>${conductor.first_name}</td>
+
+            <td>${conductor.last_name}</td>
+
+            <td>${conductor.phone}</td>
+
+            <td>${conductor.email}</td>
+
+            <td>${conductor.experience_years}</td>
+
+        `;
+
+        row.onclick = function(){
+
+            fillConductor(conductor);
+
+        };
+
+        conductorTableBody.appendChild(row);
+
+    });
+
+}
+
+
+// ==============================================
+// Fill Form
+// ==============================================
+
+function fillConductor(conductor){
+
+    cid.value = conductor.c_id;
+
+    cfname.value = conductor.first_name;
+
+    clname.value = conductor.last_name;
+
+    cphone.value = conductor.phone;
+
+    cemail.value = conductor.email;
+
+    cexperience.value = conductor.experience_years;
+
+}
+
+
+// ==============================================
+// Add Conductor
+// ==============================================
+
+addConductor.onclick = async function(){
+
+    const conductor = {
+
+        first_name: cfname.value,
+
+        last_name: clname.value,
+
+        phone: cphone.value,
+
+        email: cemail.value,
+
+        experience_years: Number(cexperience.value)
+
+    };
+
+    const result = await request(
+
+        "/conductors",
+
+        "POST",
+
+        conductor
+
+    );
+
+    alert(result.message);
+
+    clearConductorForm();
+
+    loadConductors();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Update Conductor
+// ==============================================
+
+updateConductor.onclick = async function(){
+
+    if(cid.value===""){
+
+        alert("Select Conductor");
+
+        return;
+
+    }
+
+    const conductor = {
+
+        first_name: cfname.value,
+
+        last_name: clname.value,
+
+        phone: cphone.value,
+
+        email: cemail.value,
+
+        experience_years:Number(cexperience.value)
+
+    };
+
+    const result = await request(
+
+        "/conductors?id="+cid.value,
+
+        "PUT",
+
+        conductor
+
+    );
+
+    alert(result.message);
+
+    clearConductorForm();
+
+    loadConductors();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Delete Conductor
+// ==============================================
+
+deleteConductor.onclick = async function(){
+
+    if(cid.value===""){
+
+        alert("Select Conductor");
+
+        return;
+
+    }
+
+    if(!confirm("Delete Conductor?")){
+
+        return;
+
+    }
+
+    const result = await request(
+
+        "/conductors?id="+cid.value,
+
+        "DELETE"
+
+    );
+
+    alert(result.message);
+
+    clearConductorForm();
+
+    loadConductors();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Clear Form
+// ==============================================
+
+function clearConductorForm(){
+
+    clearFields([
+
+        cid,
+
+        cfname,
+
+        clname,
+
+        cphone,
+
+        cemail,
+
+        cexperience
+
+    ]);
+
+}
+
+
+// ==============================================
+// Search
+// ==============================================
+
+filterTable(
+
+    "searchConductor",
+
+    conductorTableBody
+
+);
+
+
+// ==============================================
+// Initial Load
+// ==============================================
+
+loadConductors();
+
+// ==============================================
+// Ticket Variables
+// ==============================================
+
+const tid = document.getElementById("tid");
+
+const tticketnumber = document.getElementById("tticketnumber");
+const tbookingdate = document.getElementById("tbookingdate");
+const tjourneydate = document.getElementById("tjourneydate");
+const tseatnumber = document.getElementById("tseatnumber");
+const tfare = document.getElementById("tfare");
+
+const ticketTableBody = document.getElementById("ticketTableBody");
+
+const addTicket = document.getElementById("addTicket");
+const updateTicket = document.getElementById("updateTicket");
+const deleteTicket = document.getElementById("deleteTicket");
+const clearTicket = document.getElementById("clearTicket");
+
+
+// ==============================================
+// Load Tickets
+// ==============================================
+
+async function loadTickets(){
+
+    const result = await request("/tickets");
+
+    ticketTableBody.innerHTML = "";
+
+    result.data.forEach(ticket=>{
+
+        const row=document.createElement("tr");
+
+        row.innerHTML=`
+
+            <td>${ticket.t_id}</td>
+
+            <td>${ticket.ticket_number}</td>
+
+            <td>${ticket.booking_date}</td>
+
+            <td>${ticket.journey_date}</td>
+
+            <td>${ticket.seat_number}</td>
+
+            <td>${ticket.fare}</td>
+
+        `;
+
+        row.onclick=function(){
+
+            fillTicket(ticket);
+
+        };
+
+        ticketTableBody.appendChild(row);
+
+    });
+
+}
+
+
+// ==============================================
+// Fill Ticket Form
+// ==============================================
+
+function fillTicket(ticket){
+
+    tid.value=ticket.t_id;
+
+    tticketnumber.value=ticket.ticket_number;
+
+    tbookingdate.value=ticket.booking_date;
+
+    tjourneydate.value=ticket.journey_date;
+
+    tseatnumber.value=ticket.seat_number;
+
+    tfare.value=ticket.fare;
+
+}
+
+
+// ==============================================
+// Add Ticket
+// ==============================================
+
+addTicket.onclick=async function(){
+
+    const ticket={
+
+        ticket_number:tticketnumber.value,
+
+        booking_date:tbookingdate.value,
+
+        journey_date:tjourneydate.value,
+
+        seat_number:tseatnumber.value,
+
+        fare:Number(tfare.value)
+
+    };
+
+    const result=await request(
+
+        "/tickets",
+
+        "POST",
+
+        ticket
+
+    );
+
+    alert(result.message);
+
+    clearTicketForm();
+
+    loadTickets();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Update Ticket
+// ==============================================
+
+updateTicket.onclick=async function(){
+
+    if(tid.value===""){
+
+        alert("Select Ticket");
+
+        return;
+
+    }
+
+    const ticket={
+
+        ticket_number:tticketnumber.value,
+
+        booking_date:tbookingdate.value,
+
+        journey_date:tjourneydate.value,
+
+        seat_number:tseatnumber.value,
+
+        fare:Number(tfare.value)
+
+    };
+
+    const result=await request(
+
+        "/tickets?id="+tid.value,
+
+        "PUT",
+
+        ticket
+
+    );
+
+    alert(result.message);
+
+    clearTicketForm();
+
+    loadTickets();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Delete Ticket
+// ==============================================
+
+deleteTicket.onclick=async function(){
+
+    if(tid.value===""){
+
+        alert("Select Ticket");
+
+        return;
+
+    }
+
+    if(!confirm("Delete Ticket?")){
+
+        return;
+
+    }
+
+    const result=await request(
+
+        "/tickets?id="+tid.value,
+
+        "DELETE"
+
+    );
+
+    alert(result.message);
+
+    clearTicketForm();
+
+    loadTickets();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Clear Ticket Form
+// ==============================================
+
+function clearTicketForm(){
+
+    clearFields([
+
+        tid,
+
+        tticketnumber,
+
+        tbookingdate,
+
+        tjourneydate,
+
+        tseatnumber,
+
+        tfare
+
+    ]);
+
+}
+
+
+// ==============================================
+// Search Ticket
+// ==============================================
+
+filterTable(
+
+    "searchTicket",
+
+    ticketTableBody
+
+);
+
+
+// ==============================================
+// Initial Load
+// ==============================================
+
+loadTickets();
+
+// ==============================================
+// Report Variables
+// ==============================================
+
+const reportTableBody =
+document.getElementById("reportTableBody");
+
+const passengerTicketReport =
+document.getElementById("passengerTicketReport");
+
+const passengerBusReport =
+document.getElementById("passengerBusReport");
+
+const conductorBusReport =
+document.getElementById("conductorBusReport");
+
+
+// ==============================================
+// Generic Report Loader
+// ==============================================
+
+async function loadReport(endpoint){
+
+    const result = await request(endpoint);
+
+    reportTableBody.innerHTML = "";
+
+    if(result.data.length===0){
+
+        reportTableBody.innerHTML=`
+
+            <tr>
+
+                <td>No Records Found</td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+    result.data.forEach(record=>{
+
+        const row=document.createElement("tr");
+
+        row.innerHTML=`
+
+            <td>${Object.values(record).join(" | ")}</td>
+
+        `;
+
+        reportTableBody.appendChild(row);
+
+    });
+
+}
+
+
+// ==============================================
+// Passenger Ticket Report
+// ==============================================
+
+passengerTicketReport.onclick=function(){
+
+    loadReport("/reports/passenger-ticket");
+
+};
+
+
+// ==============================================
+// Passenger Bus Report
+// ==============================================
+
+passengerBusReport.onclick=function(){
+
+    loadReport("/reports/passenger-bus");
+
+};
+
+
+// ==============================================
+// Conductor Bus Report
+// ==============================================
+
+conductorBusReport.onclick=function(){
+
+    loadReport("/reports/conductor-bus");
+
+};
+
+
+// ==============================================
+// Refresh Everything
+// ==============================================
+
+async function refreshSystem(){
+
+    await loadDashboard();
+
+    await loadPassengers();
+
+    await loadBuses();
+
+    await loadConductors();
+
+    await loadTickets();
+
+}
+
+
+// ==============================================
+// Window Load
+// ==============================================
+
+window.onload=function(){
+
+    showSection("dashboard");
+
+    refreshSystem();
+
+};
+
+
+// ==============================================
+// Clear Buttons
+// ==============================================
+
+clearPassenger.onclick=clearPassengerForm;
+
+clearBus.onclick=clearBusForm;
+
+clearConductor.onclick=clearConductorForm;
+
+clearTicket.onclick=clearTicketForm;
+
+
+// ==============================================
+// End of File
+// ==============================================

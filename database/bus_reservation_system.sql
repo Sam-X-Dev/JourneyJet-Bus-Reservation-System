@@ -1259,4 +1259,3 @@ SELECT * FROM passenger_ticket_details;
 SELECT * FROM passenger_bus_details;
 SELECT * FROM conductor_bus_details;
 
-
