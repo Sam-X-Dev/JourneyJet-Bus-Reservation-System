@@ -934,3 +934,329 @@ VALUES
 (99,99),
 (100,100);
 
+-- Display all passengers
+SELECT * FROM passengers;
+
+-- Display all buses
+SELECT * FROM buses;
+
+-- Display all conductors
+SELECT * FROM conductors;
+
+--  Display all tickets
+SELECT * FROM tickets;
+
+--  Display only female passengers
+SELECT *
+FROM passengers
+WHERE gender='Female';
+
+--  Display AC buses
+SELECT *
+FROM buses
+WHERE bus_type='AC';
+
+--  Display tickets costing more than 500
+SELECT *
+FROM tickets
+WHERE fare>500;
+
+--  Display buses ordered by bus name
+SELECT *
+FROM buses
+ORDER BY bus_name;
+
+-- Add a new column to passengers table
+ALTER TABLE passengers
+ADD emergency_contact VARCHAR(15);
+
+
+--  Modify the size of bus_name column
+ALTER TABLE buses
+MODIFY bus_name VARCHAR(150);
+
+
+-- Drop the added emergency_contact column
+ALTER TABLE passengers
+DROP COLUMN emergency_contact;
+
+-- INDEXES
+-- Index on Passenger Name
+CREATE INDEX idx_passenger_name
+ON passengers(first_name);
+
+-- Index on Bus Name
+CREATE INDEX idx_bus_name
+ON buses(bus_name);
+
+-- Index on Ticket Number
+CREATE INDEX idx_ticket_number
+ON tickets(ticket_number);
+
+SHOW INDEX FROM passengers;
+SHOW INDEX FROM buses;
+SHOW INDEX FROM tickets;
+
+-- JOINS
+
+-- Display Passenger Details with Ticket Details
+SELECT
+    p.p_id,
+    CONCAT(p.first_name,' ',p.last_name) AS passenger_name,
+    t.ticket_number,
+    t.seat_number,
+    t.fare
+FROM passengers p
+INNER JOIN passenger_ticket pt
+ON p.p_id = pt.p_id
+INNER JOIN tickets t
+ON pt.t_id = t.t_id;
+
+
+-- Display Passenger Details with Bus Details
+SELECT
+    p.p_id,
+    CONCAT(p.first_name,' ',p.last_name) AS passenger_name,
+    b.bus_name,
+    b.source,
+    b.destination
+FROM passengers p
+INNER JOIN passenger_bus pb
+ON p.p_id = pb.p_id
+INNER JOIN buses b
+ON pb.b_id = b.b_number;
+
+-- Display Conductor Details with Assigned Bus
+SELECT
+    c.c_id,
+    CONCAT(c.first_name,' ',c.last_name) AS conductor_name,
+    b.bus_name,
+    b.bus_type
+FROM conductors c
+INNER JOIN conductor_bus cb
+ON c.c_id = cb.c_id
+INNER JOIN buses b
+ON cb.b_id = b.b_number;
+
+-- Display Ticket Checked by Conductor
+SELECT
+    t.ticket_number,
+    CONCAT(c.first_name,' ',c.last_name) AS checked_by,
+    ct.checked_at
+FROM tickets t
+INNER JOIN conductor_ticket ct
+ON t.t_id = ct.t_id
+INNER JOIN conductors c
+ON ct.c_id = c.c_id;
+
+-- Complete Passenger Journey Details
+SELECT
+    CONCAT(p.first_name,' ',p.last_name) AS passenger_name,
+    b.bus_name,
+    b.source,
+    b.destination,
+    t.ticket_number,
+    t.seat_number,
+    t.fare
+FROM passengers p
+INNER JOIN passenger_bus pb
+ON p.p_id = pb.p_id
+INNER JOIN buses b
+ON pb.b_id = b.b_number
+INNER JOIN passenger_ticket pt
+ON p.p_id = pt.p_id
+INNER JOIN tickets t
+ON pt.t_id = t.t_id;
+
+-- AGGREGATE FUNCTIONS
+
+-- Count Total Passengers
+SELECT COUNT(*) AS Total_Passengers
+FROM passengers;
+
+
+-- Calculate Total Ticket Revenue
+SELECT SUM(fare) AS Total_Revenue
+FROM tickets;
+
+
+-- Calculate Average Ticket Fare
+SELECT AVG(fare) AS Average_Fare
+FROM tickets;
+
+
+-- Display Highest Ticket Fare
+SELECT MAX(fare) AS Highest_Fare
+FROM tickets;
+
+
+-- Display Lowest Ticket Fare
+SELECT MIN(fare) AS Lowest_Fare
+FROM tickets;
+
+
+-- GROUP BY & HAVING QUERIES
+-- Count Passengers Travelling in Each Bus
+SELECT
+    b_number,
+    COUNT(p_id) AS Total_Passengers
+FROM passenger_bus
+GROUP BY b_number;
+
+
+-- Count Tickets Checked by Each Conductor
+SELECT
+    c_id,
+    COUNT(t_id) AS Total_Tickets_Checked
+FROM conductor_ticket
+GROUP BY c_id;
+
+
+-- Display Average Ticket Fare for Each Seat Number
+SELECT
+    seat_number,
+    AVG(fare) AS Average_Fare
+FROM tickets
+GROUP BY seat_number;
+
+
+-- Display Buses Having More Than One Passenger
+SELECT
+    b_number,
+    COUNT(p_id) AS Total_Passengers
+FROM passenger_bus
+GROUP BY b_number
+HAVING COUNT(p_id) > 1;
+
+
+-- Display Conductors Who Checked More Than One Ticket
+SELECT
+    c_id,
+    COUNT(t_id) AS Total_Tickets_Checked
+FROM conductor_ticket
+GROUP BY c_id
+HAVING COUNT(t_id) > 1;
+
+
+-- NESTED QUERIES
+-- Display Passenger(s) Who Purchased the Highest Fare Ticket
+SELECT *
+FROM passengers
+WHERE p_id IN (
+    SELECT p_id
+    FROM passenger_ticket
+    WHERE t_id = (
+        SELECT t_id
+        FROM tickets
+        WHERE fare = (
+            SELECT MAX(fare)
+            FROM tickets
+        )
+    )
+);
+
+
+--  Display Bus Details Having the Maximum Number of Passengers
+SELECT *
+FROM buses
+WHERE b_number = (
+    SELECT b_number
+    FROM passenger_bus
+    GROUP BY b_number
+    ORDER BY COUNT(*) DESC
+    LIMIT 1
+);
+
+
+-- Display Ticket(s) Whose Fare is Greater Than the Average Fare
+SELECT *
+FROM tickets
+WHERE fare > (
+    SELECT AVG(fare)
+    FROM tickets
+);
+
+
+-- Display Passenger(s) Who Have Not Purchased Any Ticket
+SELECT *
+FROM passengers
+WHERE p_id NOT IN (
+    SELECT p_id
+    FROM passenger_ticket
+);
+
+
+-- Display Conductor(s) Who Have Checked the Maximum Number of Tickets
+SELECT *
+FROM conductors
+WHERE c_id = (
+    SELECT c_id
+    FROM conductor_ticket
+    GROUP BY c_id
+    ORDER BY COUNT(*) DESC
+    LIMIT 1
+);
+
+-- VIEWS
+
+DROP VIEW IF EXISTS passenger_ticket_details;
+DROP VIEW IF EXISTS passenger_bus_details;
+DROP VIEW IF EXISTS conductor_bus_details;
+-- Passenger Ticket Details
+CREATE VIEW passenger_ticket_details AS
+SELECT
+    p.p_id,
+    CONCAT(p.first_name, ' ', p.last_name) AS passenger_name,
+    t.ticket_number,
+    t.seat_number,
+    t.fare
+FROM passengers p
+INNER JOIN passenger_ticket pt
+    ON p.p_id = pt.p_id
+INNER JOIN tickets t
+    ON pt.t_id = t.t_id;
+
+
+-- Passenger Bus Details
+
+CREATE VIEW passenger_bus_details AS
+SELECT
+    p.p_id,
+    CONCAT(p.first_name, ' ', p.last_name) AS passenger_name,
+    b.b_number,
+    b.bus_name,
+    b.bus_type,
+    b.source,
+    b.destination,
+    b.departure_time,
+    b.arrival_time
+FROM passengers p
+INNER JOIN passenger_bus pb
+    ON p.p_id = pb.p_id
+INNER JOIN buses b
+    ON pb.b_number = b.b_number;
+
+-- Conductor Bus Details
+CREATE VIEW conductor_bus_details AS
+SELECT
+    c.c_id,
+    CONCAT(c.first_name, ' ', c.last_name) AS conductor_name,
+    b.b_number,
+    b.bus_name,
+    b.bus_type,
+    b.source,
+    b.destination,
+    b.departure_time,
+    b.arrival_time
+FROM conductors c
+INNER JOIN conductor_bus cb
+    ON c.c_id = cb.c_id
+INNER JOIN buses b
+    ON cb.b_number = b.b_number;
+
+
+SELECT * FROM passenger_ticket_details;
+SELECT * FROM passenger_bus_details;
+SELECT * FROM conductor_bus_details;
+
+
