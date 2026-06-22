@@ -371,3 +371,397 @@ updatePassenger.onclick=async function(){
 
 };
 
+
+// ==============================================
+// Delete Passenger
+// ==============================================
+
+deletePassenger.onclick=async function(){
+
+    if(pid.value===""){
+
+        alert("Select Passenger");
+
+        return;
+
+    }
+
+    if(!confirm("Delete Passenger?")){
+
+        return;
+
+    }
+
+    const result=await request(
+
+        "/passengers?id="+pid.value,
+
+        "DELETE"
+
+    );
+
+    alert(result.message);
+
+    clearPassengerForm();
+
+    loadPassengers();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Clear Form
+// ==============================================
+
+function clearPassengerForm(){
+
+    clearFields([
+
+        pid,
+
+        pfname,
+
+        plname,
+
+        pgender,
+
+        page,
+
+        pphone,
+
+        pemail,
+
+        paddress
+
+    ]);
+
+}
+
+
+// ==============================================
+// Search
+// ==============================================
+
+filterTable(
+
+    "searchPassenger",
+
+    passengerTableBody
+
+);
+
+
+// ==============================================
+// Initial Passenger Load
+// ==============================================
+
+loadPassengers();
+
+// ==============================================
+// Bus Variables
+// ==============================================
+
+const bid = document.getElementById("bid");
+const bnumber = document.getElementById("bnumber");
+const bname = document.getElementById("bname");
+const btype = document.getElementById("btype");
+const bseats = document.getElementById("bseats");
+const bsource = document.getElementById("bsource");
+const bdestination = document.getElementById("bdestination");
+const bdeparture = document.getElementById("bdeparture");
+const barrival = document.getElementById("barrival");
+
+const busTableBody = document.getElementById("busTableBody");
+
+const addBus = document.getElementById("addBus");
+const updateBus = document.getElementById("updateBus");
+const deleteBus = document.getElementById("deleteBus");
+const clearBus = document.getElementById("clearBus");
+
+
+// ==============================================
+// Load Buses
+// ==============================================
+
+async function loadBuses(){
+
+    const result = await request("/buses");
+
+    busTableBody.innerHTML = "";
+
+    result.data.forEach(bus=>{
+
+        const row=document.createElement("tr");
+
+        row.innerHTML=`
+
+            <td>${bus.b_number}</td>
+            <td>${bus.bus_name}</td>
+            <td>${bus.bus_type}</td>
+            <td>${bus.total_seats}</td>
+            <td>${bus.source}</td>
+            <td>${bus.destination}</td>
+            <td>${bus.departure_time}</td>
+            <td>${bus.arrival_time}</td>
+
+        `;
+
+        row.onclick=function(){
+
+            fillBus(bus);
+
+        };
+
+        busTableBody.appendChild(row);
+
+    });
+
+}
+
+
+// ==============================================
+// Fill Form
+// ==============================================
+
+function fillBus(bus){
+
+    bid.value = bus.b_id;
+
+    bnumber.value = bus.b_number;
+
+    bname.value = bus.bus_name;
+
+    btype.value = bus.bus_type;
+
+    bseats.value = bus.total_seats;
+
+    bsource.value = bus.source;
+
+    bdestination.value = bus.destination;
+
+    bdeparture.value = bus.departure_time;
+
+    barrival.value = bus.arrival_time;
+
+}
+
+
+// ==============================================
+// Add Bus
+// ==============================================
+
+addBus.onclick=async function(){
+
+    const bus={
+
+        b_number:bnumber.value,
+
+        bus_name:bname.value,
+
+        bus_type:btype.value,
+
+        total_seats:Number(bseats.value),
+
+        source:bsource.value,
+
+        destination:bdestination.value,
+
+        departure_time:bdeparture.value,
+
+        arrival_time:barrival.value
+
+    };
+
+    const result=await request(
+
+        "/buses",
+
+        "POST",
+
+        bus
+
+    );
+
+    alert(result.message);
+
+    clearBusForm();
+
+    loadBuses();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Update Bus
+// ==============================================
+
+updateBus.onclick=async function(){
+
+    if(bid.value===""){
+
+        alert("Select Bus");
+
+        return;
+
+    }
+
+    const bus={
+
+        b_number:bnumber.value,
+
+        bus_name:bname.value,
+
+        bus_type:btype.value,
+
+        total_seats:Number(bseats.value),
+
+        source:bsource.value,
+
+        destination:bdestination.value,
+
+        departure_time:bdeparture.value,
+
+        arrival_time:barrival.value
+
+    };
+
+    const result=await request(
+
+        "/buses?id="+bid.value,
+
+        "PUT",
+
+        bus
+
+    );
+
+    alert(result.message);
+
+    clearBusForm();
+
+    loadBuses();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Delete Bus
+// ==============================================
+
+deleteBus.onclick=async function(){
+
+    if(bid.value===""){
+
+        alert("Select Bus");
+
+        return;
+
+    }
+
+    if(!confirm("Delete Bus?")){
+
+        return;
+
+    }
+
+    const result=await request(
+
+        "/buses?id="+bid.value,
+
+        "DELETE"
+
+    );
+
+    alert(result.message);
+
+    clearBusForm();
+
+    loadBuses();
+
+    loadDashboard();
+
+};
+
+
+// ==============================================
+// Clear Form
+// ==============================================
+
+function clearBusForm(){
+
+    clearFields([
+
+        bid,
+
+        bnumber,
+
+        bname,
+
+        btype,
+
+        bseats,
+
+        bsource,
+
+        bdestination,
+
+        bdeparture,
+
+        barrival
+
+    ]);
+
+}
+
+
+// ==============================================
+// Search
+// ==============================================
+
+filterTable(
+
+    "searchBus",
+
+    busTableBody
+
+);
+
+
+// ==============================================
+// Initial Bus Load
+// ==============================================
+
+loadBuses();
+
+// ==============================================
+// Conductor Variables
+// ==============================================
+
+const cid = document.getElementById("cid");
+
+const cfname = document.getElementById("cfname");
+const clname = document.getElementById("clname");
+const cphone = document.getElementById("cphone");
+const cemail = document.getElementById("cemail");
+const cexperience = document.getElementById("cexperience");
+
+const conductorTableBody =
+document.getElementById("conductorTableBody");
+
+const addConductor =
+document.getElementById("addConductor");
+
+const updateConductor =
+document.getElementById("updateConductor");
+
+const deleteConductor =
+document.getElementById("deleteConductor");
+
+const clearConductor =
+document.getElementById("clearConductor");
