@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>JourneyJet</title>
+
+    <link rel="shortcut icon" href="./logo.ico" type="image/x-icon" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <h1>
+        <i class="fa-solid fa-bus"></i>
+
+        JourneyJet
+      </h1>
+
+      <p>Manage Passengers, Buses, Conductors and Tickets</p>
+    </header>
+
+    <div class="container">
+      <!-- ================= Sidebar ================= -->
+
+      <aside class="sidebar">
+        <nav>
+          <ul>
+            <li>
+              <a href="#" id="nav-dashboard">
+                <i class="fa-solid fa-gauge"></i>
+                Dashboard
+              </a>
+            </li>
+
+            <li>
+              <a href="#" id="nav-passenger">
+                <i class="fa-solid fa-user"></i>
+                Passenger
+              </a>
+            </li>
+
+            <li>
+              <a href="#" id="nav-bus">
+                <i class="fa-solid fa-bus"></i>
+                Bus
+              </a>
+            </li>
+
+            <li>
+              <a href="#" id="nav-conductor">
+                <i class="fa-solid fa-id-card"></i>
+                Conductor
+              </a>
+            </li>
+
+            <li>
+              <a href="#" id="nav-ticket">
+                <i class="fa-solid fa-ticket"></i>
+                Ticket
+              </a>
+            </li>
+
+            <li>
+              <a href="#" id="nav-reports">
+                <i class="fa-solid fa-chart-column"></i>
+                Reports
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- ================= Main ================= -->
+
+      <main class="content">
+        <!-- ================= Dashboard ================= -->
+
+        <section id="dashboard-section">
+          <h2>Dashboard</h2>
+
+          <div class="cards">
+            <div class="card">
+              <h3>Total Passengers</h3>
+
+              <h1 id="totalPassengers">0</h1>
+            </div>
+
+            <div class="card">
+              <h3>Total Buses</h3>
+
+              <h1 id="totalBuses">0</h1>
+            </div>
+
+            <div class="card">
+              <h3>Total Conductors</h3>
+
+              <h1 id="totalConductors">0</h1>
+            </div>
+
+            <div class="card">
+              <h3>Total Tickets</h3>
+
+              <h1 id="totalTickets">0</h1>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= Passenger ================= -->
+
+        <section id="passenger-section" class="hidden">
+          <h2>Passenger Management</h2>
+
+          <form id="passengerForm">
+            <input type="hidden" id="pid" />
+
+            <div class="form-grid">
+              <input
+                type="text"
+                id="pfname"
+                placeholder="First Name"
+                required
+              />
+
+              <input type="text" id="plname" placeholder="Last Name" required />
+
+              <select id="pgender" required>
+                <option value="">Select Gender</option>
+
+                <option value="Male">Male</option>
+
+                <option value="Female">Female</option>
+
+                <option value="Other">Other</option>
+              </select>
+
+              <input
+                type="number"
+                id="page"
+                placeholder="Age"
+                min="1"
+                required
+              />
+
+              <input
+                type="tel"
+                id="pphone"
+                placeholder="Phone Number"
+                required
+              />
+
+              <input type="email" id="pemail" placeholder="Email Address" />
+
+              <input type="text" id="paddress" placeholder="Address" />
+            </div>
+
+            <div class="buttons">
+              <button type="button" id="addPassenger">Add</button>
+
+              <button type="button" id="updatePassenger">Update</button>
+
+              <button type="button" id="deletePassenger">Delete</button>
+
+              <button type="reset" id="clearPassenger">Clear</button>
+            </div>
+          </form>
+
+          <input
+            type="text"
+            id="searchPassenger"
+            placeholder="Search Passenger..."
+          />
+
+          <br /><br />
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+
+                <th>First Name</th>
+
+                <th>Last Name</th>
+
+                <th>Gender</th>
+
+                <th>Age</th>
+
+                <th>Phone</th>
+
+                <th>Email</th>
+
+                <th>Address</th>
+              </tr>
+            </thead>
+
+            <tbody id="passengerTableBody"></tbody>
+          </table>
+        </section>
+        <!-- ================= Bus ================= -->
+
+        <section id="bus-section" class="hidden">
+          <h2>Bus Management</h2>
+
+          <form id="busForm">
+            <input type="hidden" id="bid" />
+
+            <div class="form-grid">
+              <input
+                type="text"
+                id="bnumber"
+                placeholder="Bus Number"
+                required
+              />
+
+              <input type="text" id="bname" placeholder="Bus Name" required />
+
+              <select id="btype" required>
+                <option value="">Select Bus Type</option>
+
+                <option value="AC">AC</option>
+
+                <option value="Non-AC">Non-AC</option>
+
+                <option value="Sleeper">Sleeper</option>
+
+                <option value="Semi-Sleeper">Semi Sleeper</option>
+              </select>
+
+              <input
+                type="number"
+                id="bseats"
+                placeholder="Total Seats"
+                required
+              />
+
+              <input type="text" id="bsource" placeholder="Source" required />
+
+              <input
+                type="text"
+                id="bdestination"
+                placeholder="Destination"
+                required
+              />
+
+              <input type="time" id="bdeparture" required />
+
+              <input type="time" id="barrival" required />
+            </div>
+
+            <div class="buttons">
+              <button type="button" id="addBus">Add</button>
+
+              <button type="button" id="updateBus">Update</button>
+
+              <button type="button" id="deleteBus">Delete</button>
+
+              <button type="reset" id="clearBus">Clear</button>
+            </div>
+          </form>
+
+          <input type="text" id="searchBus" placeholder="Search Bus..." />
+
+          <br /><br />
+
+          <table>
+            <thead>
+              <tr>
+                <th>Bus No.</th>
+
+                <th>Bus Name</th>
+
+                <th>Type</th>
+
+                <th>Seats</th>
+
+                <th>Source</th>
+
+                <th>Destination</th>
+
+                <th>Departure</th>
+
+                <th>Arrival</th>
+              </tr>
+            </thead>
+
+            <tbody id="busTableBody"></tbody>
+          </table>
+        </section>
+
+        <!-- ================= Conductor ================= -->
+
+        <section id="conductor-section" class="hidden">
+          <h2>Conductor Management</h2>
+
+          <form id="conductorForm">
+            <input type="hidden" id="cid" />
+
+            <div class="form-grid">
+              <input
+                type="text"
+                id="cfname"
+                placeholder="First Name"
+                required
+              />
+
+              <input type="text" id="clname" placeholder="Last Name" required />
+
+              <input
+                type="tel"
+                id="cphone"
+                placeholder="Phone Number"
+                required
+              />
+
+              <input type="email" id="cemail" placeholder="Email Address" />
+
+              <input
+                type="number"
+                id="cexperience"
+                placeholder="Experience (Years)"
+                min="0"
+              />
+            </div>
+
+            <div class="buttons">
+              <button type="button" id="addConductor">Add</button>
+
+              <button type="button" id="updateConductor">Update</button>
+
+              <button type="button" id="deleteConductor">Delete</button>
+
+              <button type="reset" id="clearConductor">Clear</button>
+            </div>
+          </form>
+
+          <input
+            type="text"
+            id="searchConductor"
+            placeholder="Search Conductor..."
+          />
+
+          <br /><br />
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+
+                <th>First Name</th>
+
+                <th>Last Name</th>
+
+                <th>Phone</th>
+
+                <th>Email</th>
+
+                <th>Experience</th>
+              </tr>
+            </thead>
+
+            <tbody id="conductorTableBody"></tbody>
+          </table>
+        </section>
+        <!-- ================= Ticket ================= -->
+
+        <section id="ticket-section" class="hidden">
+          <h2>Ticket Management</h2>
+
+          <form id="ticketForm">
+            <input type="hidden" id="tid" />
+
+            <div class="form-grid">
+              <input
+                type="text"
+                id="tticketnumber"
+                placeholder="Ticket Number"
+                required
+              />
+
+              <input type="date" id="tbookingdate" required />
+
+              <input type="date" id="tjourneydate" required />
+
+              <input
+                type="text"
+                id="tseatnumber"
+                placeholder="Seat Number"
+                required
+              />
+
+              <input
+                type="number"
+                id="tfare"
+                placeholder="Fare"
+                min="0"
+                required
+              />
+            </div>
+
+            <div class="buttons">
+              <button type="button" id="addTicket">Add</button>
+
+              <button type="button" id="updateTicket">Update</button>
+
+              <button type="button" id="deleteTicket">Delete</button>
+
+              <button type="reset" id="clearTicket">Clear</button>
+            </div>
+          </form>
+
+          <input type="text" id="searchTicket" placeholder="Search Ticket..." />
+
+          <br /><br />
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+
+                <th>Ticket No.</th>
+
+                <th>Booking Date</th>
+
+                <th>Journey Date</th>
+
+                <th>Seat No.</th>
+
+                <th>Fare</th>
+              </tr>
+            </thead>
+
+            <tbody id="ticketTableBody"></tbody>
+          </table>
+        </section>
+
+        <!-- ================= Reports ================= -->
+
+        <section id="reports-section" class="hidden">
+          <h2>Reports</h2>
+
+          <div class="buttons">
+            <button type="button" id="passengerTicketReport">
+              Passenger Ticket Details
+            </button>
+
+            <button type="button" id="passengerBusReport">
+              Passenger Bus Details
+            </button>
+
+            <button type="button" id="conductorBusReport">
+              Conductor Bus Details
+            </button>
+          </div>
+
+          <br />
+
+          <table>
+            <thead>
+              <tr>
+                <th>Report Output</th>
+              </tr>
+            </thead>
+
+            <tbody id="reportTableBody"></tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
